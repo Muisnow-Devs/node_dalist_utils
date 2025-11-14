@@ -4,7 +4,7 @@ import Week from "../enums/Week";
 import * as z from "zod";
 
 const defaultDaySeconds = z.int().refine((val) => val <= 86400, {
-    message: "From time must be less than or equal to 86400 seconds",
+    message: "Seconds value must be less than or equal to 86400 seconds",
 });
 export const ScheduleSchema = z.object({
     id: z.number().optional(),
