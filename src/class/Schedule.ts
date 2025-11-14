@@ -1,6 +1,28 @@
 import { intFromByteArray, stringToByteArray } from "../utils/byte";
 import ScheduleTime from "./ScheduleTime";
 import Week from "../enums/Week";
+import * as z from "zod";
+
+const defaultDaySeconds = z.int().refine((val) => val <= 86400, {
+    message: "From time must be less than or equal to 86400 seconds",
+});
+export const ScheduleSchema = z.object({
+    id: z.number().optional(),
+    title: z.string(),
+    description: z.string().optional(),
+    at: z.string().optional(),
+    instructor: z.string().optional(),
+    location: z.string().optional(),
+    week: z.number().refine((val) => val >= 1 && val <= 7, {
+        message: "Week must be between 1 and 7",
+    }),
+    from: defaultDaySeconds,
+    to: defaultDaySeconds,
+    series: z.string().optional(),
+    notifiable: z.boolean().optional(),
+    createAt: z.date().optional(),
+    enabled: z.boolean().optional(),
+})
 
 class Schedule {
     id: number;
@@ -17,21 +39,7 @@ class Schedule {
     createAt: Date;
     enabled: boolean;
 
-    constructor(params: {
-        id?: number;
-        title: string;
-        description?: string;
-        at?: string;
-        instructor?: string;
-        location?: string;
-        week: Week;
-        from: ScheduleTime;
-        to: ScheduleTime;
-        series?: string;
-        notifiable?: boolean;
-        createAt?: Date;
-        enabled?: boolean;
-    }) {
+    constructor(params: z.infer<typeof ScheduleSchema>) {
         this.id = params.id ?? 0;
         this.title = params.title;
         this.description = params.description;
@@ -39,8 +47,8 @@ class Schedule {
         this.instructor = params.instructor;
         this.location = params.location;
         this.week = params.week;
-        this.from = params.from;
-        this.to = params.to;
+        this.from = ScheduleTime.fromInt(params.from);
+        this.to = ScheduleTime.fromInt(params.to);
         this.series = params.series;
         this.notifiable = params.notifiable ?? true;
         this.createAt = params.createAt ?? new Date();
@@ -146,9 +154,6 @@ class Schedule {
         const fromInt = intFromByteArray(fromBytes);
         const toInt = intFromByteArray(toBytes);
 
-        const from = ScheduleTime.fromInt(fromInt);
-        const to = ScheduleTime.fromInt(toInt);
-
         return new Schedule({
             title,
             description: description || undefined,
@@ -156,8 +161,8 @@ class Schedule {
             instructor: instructor || undefined,
             location: location || undefined,
             week: week as Week,
-            from,
-            to,
+            from: fromInt,
+            to: toInt,
         });
     }
 }

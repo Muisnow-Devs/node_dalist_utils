@@ -1,11 +1,16 @@
 {
   "name": "dalist_utils",
-  "version": "1.0.0",
-  "main": "./dist/index.js",
+  "version": "1.0.1",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
+    "prepublishOnly": "yarn build"
   },
+  "files": [
+    "dist/"
+  ],
   "author": "Muisnow Devs",
   "license": "MIT",
   "homepage": "https://github.com/Muisnow-Devs/node_dalist_utils",
@@ -17,5 +22,8 @@
     "@types/node": "^24.10.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
   }
 }
