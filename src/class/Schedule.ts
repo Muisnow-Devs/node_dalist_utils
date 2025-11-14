@@ -124,6 +124,23 @@ class Schedule {
         return combined;
     }
 
+    toUploadJSON(): string {
+        return JSON.stringify({
+            title: this.title,
+            description: this.description ?? null,
+            at: this.at ?? null,
+            instructor: this.instructor ?? null,
+            location: this.location ?? null,
+            week: this.week,
+            from: this.from.toInt(),
+            to: this.to.toInt(),
+            notifiable: this.notifiable,
+            series: this.series ?? null,
+            createAt: this.createAt,
+            enabled: this.enabled,
+        });
+    }
+
     static decodeFormat(data: Uint8Array): Schedule {
         let offset = 0;
 
