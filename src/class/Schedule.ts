@@ -18,7 +18,7 @@ export const ScheduleSchema = z.object({
     }),
     from: defaultDaySeconds,
     to: defaultDaySeconds,
-    series: z.string().optional(),
+    series: z.uuid().optional(),
     notifiable: z.boolean().optional(),
     createAt: z.date().optional(),
     enabled: z.boolean().optional(),
