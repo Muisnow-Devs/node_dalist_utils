@@ -124,6 +124,23 @@ class Schedule {
         return combined;
     }
 
+    toBasicFormat(): z.infer<typeof ScheduleSchema> {
+        return {
+            title: this.title,
+            description: this.description,
+            at: this.at,
+            instructor: this.instructor,
+            location: this.location,
+            week: this.week,
+            from: this.from.toInt(),
+            to: this.to.toInt(),
+            series: this.series,
+            notifiable: this.notifiable,
+            createAt: this.createAt,
+            enabled: this.enabled,
+        };
+    }
+
     toUploadJSON(): string {
         return JSON.stringify({
             title: this.title,
